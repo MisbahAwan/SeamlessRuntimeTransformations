@@ -1,0 +1,117 @@
+grammar model.myzdsl.MyZDsl with org.eclipse.xtext.common.Terminals
+
+generate myZDsl "http://www.myzdsl.model/MyZDsl"
+
+MyZModel:
+	systemstatespace+=SystemStateSpace
+	initialstate+=InitialState
+	(schemas+=Schema)*
+	 ;
+	
+SystemStateSpace:
+	((NN NN NN VBZ name=ID) | (name=ID VBZ NN NN NN))
+	((DT NNS VBP) | (NNS VBP) | (NNS) ) variables+=Variables(',' variables+=Variables)*
+	predicate+=SystemStateSpacePredicate
+	;
+SystemStateSpacePredicate:
+	DT JJ NNS VBP vas+=Variables(',' vas+=Variables)* function=FunctionList predicateVar=Variables | JJ NNS VBP vas+=Variables(',' vas+=Variables)* function=FunctionList predicateVar=Variables;
+
+NN:
+	'system' | 'state' |'space'| 'initial' | 'predicate' |'variable'|'variables'|'schema'|'operation'|'function'|'input'|'output'|'name';
+VBZ:
+	'is' | 'are' ;
+DT:
+	'The';	
+NNS:
+	'variables'| 'parameters'| 'features'|'variable'| 'parameter'| 'feature';	
+VBP:
+	'include' | 'includes' | 'is' | 'are';
+JJ:
+	'predicate' | 'initial' | 'postcondition' | 'post condition';	
+	
+InitialState:
+	JJ NN VBZ name=ID
+	((DT JJ NNS VBP) | (JJ NNS VBP)) variables+=Variables(',' variables+=Variables)*
+	((DT JJ NNS VBP) | (JJ NNS VBP)) pred+=Variables;
+	
+Schema:
+	(NN NN NN VBZ name=ID NN NN MD) state=SchemaState nameSchema=EString 
+	((DT NN NNS VBP) | (NN NNS VBP)) varsInput+=Variables(',' varsInput+=Variables)*
+	((DT NN NNS VBP) | (NN NNS VBP)) varsOutput+=Variables(',' varsOutput+=Variables)*
+	predicates+=Predicate;
+	
+CC:
+	'and'| 'or';
+MD:
+	'will' | 'are';
+VBG: 
+	'changing' |'change';	
+	
+Predicate:
+	((DT JJ NN NN VBZ) | (JJ NN NN VBZ))? vasInput+=Variables? belongs=BelongsState ? belongsVariable=Variables ? //(',' vasOutput+=Variables)*
+	((DT JJ NN NN VBZ) | (JJ NN NN VBZ))?	vasOutput+=PredicatePostCondition2 ? //expression=Variables?//(',' vasOutput+=Variables)*
+	((DT JJ NN VBG NN VBZ)| (NN VBZ) | (JJ NN VBG NN VBZ))? vasStateChange+=PredicatePostCondition1 ? ;
+
+SchemaState:
+	'CHANGE' | 'NOT CHANGE';
+ 
+Variables:
+	 name=ID;
+
+EString:
+	STRING | ID;
+	
+BelongsState:
+	'BELONGS TO' | 'DOES NOT BELONG TO';	
+	
+FunctionList:
+	'dom' | 'range';
+
+PredicatePostCondition1:
+	condition11=Variables? 'with'? 'new'?  condition12=Variables? 'and '? condition13=Variables(',' condition13=Variables)? ;
+
+PredicatePostCondition2:	
+	condition21=Variables? 'where'? condition22=Variables? 'BELONG TO'?  condition23=Variables(',' condition23=Variables)? ;
+	
+MixedListElement: 'a' | 'b' | 'c' | 'd';
+MixedList: {MixedList} '[' (elements+=MixedListElement (',' elements+=MixedListElement)*)? ']';	
+
+/*
+SystemStateSpace:
+	'system state space is' name=ID 
+	'The variables include' variables+=Variables(',' variables+=Variables)*
+	predicate+=SystemStateSpacePredicate;
+
+SystemStateSpacePredicate:	 
+	'The predicate variables are' vas+=Variables(',' vas+=Variables)* function=FunctionList predicateVar=Variables
+;
+InitialState:
+	'initial state is' name=ID
+	'The initial variables include' variables+=Variables(',' variables+=Variables)*
+	'The predicate variables are' pred+=Variables;
+Schema:
+	'schema operation name is' name=ID 'and schema state will' state=SchemaState nameSchema=EString 
+	'The input variables are' varsInput+=Variables(',' varsInput+=Variables)*
+	'The output variables are' varsOutput+=Variables(',' varsOutput+=Variables)*
+	predicates+=Predicate;
+Predicate:
+	'The postcondition input variable is'? vasInput+=Variables? belongs=BelongsState ? belongsVariable=Variables ? //(',' vasOutput+=Variables)*
+	'The postcondition output variable is'? vasOutput+=PredicatePostCondition2 ? //expression=Variables?//(',' vasOutput+=Variables)*
+	'The postcondition state changing variable is'? vasStateChange+=PredicatePostCondition1 ?
+	;
+SchemaState:
+	'CHANGE' | 'NOT CHANGE';
+Variables:
+	 name=ID;
+EString:
+	STRING | ID;
+BelongsState:
+	'BELONGS TO' | 'DOES NOT BELONG TO';	
+FunctionList:
+	'dom' | 'range';
+PredicatePostCondition1:
+	condition11=Variables? 'with'? 'new'?  condition12=Variables? 'and '? condition13=Variables(',' condition13=Variables)? ;
+PredicatePostCondition2:	
+	condition21=Variables? 'where'? condition22=Variables? 'BELONG TO'?  condition23=Variables(',' condition23=Variables)? ;		
+*/
+//	'The variables/ parameter/features include' variables+=Variables(',' variables+=Variables)*	

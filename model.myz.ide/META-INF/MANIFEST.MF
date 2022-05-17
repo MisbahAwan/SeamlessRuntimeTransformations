@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: model.myz.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: model.myz.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: model.myz.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: model.myz,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: model.myzdsl.ide.contentassist.antlr,
+ model.myzdsl.ide.contentassist.antlr.internal
